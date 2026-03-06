@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { IconArrowUpRight } from '../../assets/dashboard-assets';
+import { IconArrowUpRight } from '../icons/DashboardCardIcons';
 
 type InvoiceItem = {
   id: string;

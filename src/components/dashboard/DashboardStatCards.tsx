@@ -1,24 +1,47 @@
-import { IconBuildings } from '../../assets/dashboard-assets';
+import {
+  IconCardBuildings,
+  IconCardCoins,
+  IconCardWarningCircle,
+} from '../icons/DashboardCardIcons';
 
 type StatCardProps = {
   value: string | number;
   label: string;
   bgColor: string;
   textColor: string;
-  icon?: React.ReactNode;
+  /** Slightly darker/opaque shade for the icon circle (Figma "background") */
+  circleBgClass: string;
+  icon: React.ReactNode;
 };
 
-function StatCard({ value, label, bgColor, textColor, icon }: StatCardProps) {
+/**
+ * Stat card – Figma nodes 325:32924, 325:32925, 325:32926.
+ * Icon in 64px circle centered horizontally at top 16.53%; value + label at top 128px.
+ */
+function StatCard({ value, label, bgColor, textColor, circleBgClass, icon }: StatCardProps) {
   return (
     <div
-      className={`flex min-h-[200px] flex-1 min-w-0 flex-col rounded-2xl p-6 md:min-h-[242px] ${bgColor}`}
+      className={`relative flex min-h-[200px] flex-1 min-w-0 flex-col rounded-[16px] md:min-h-[242px] ${bgColor}`}
     >
-      <div className="mb-4 flex h-16 w-16 items-center justify-center opacity-90">{icon}</div>
-      <div className="flex flex-1 flex-col items-center justify-center text-center">
-        <p className="font-bold leading-[48px] text-[32px]" style={{ color: textColor }}>
+      {/* Icon holder circle – 64px, center of box horizontally, top 16.53% (Figma "background") */}
+      <div
+        className={`absolute left-1/2 top-[16.53%] flex h-16 w-16 -translate-x-1/2 items-center justify-center rounded-full ${circleBgClass}`}
+      >
+        {/* Icon 24px centered inside circle (Figma Buildings/Coins/WarningCircle) */}
+        <div className="flex h-6 w-6 items-center justify-center">{icon}</div>
+      </div>
+      {/* Value + label – centered, top 128px (Figma #206:95236) */}
+      <div className="absolute left-1/2 top-[128px] flex w-[252px] max-w-[calc(100%-32px)] -translate-x-1/2 flex-col items-center text-center">
+        <p
+          className="font-bold leading-[48px] text-[32px]"
+          style={{ color: textColor, fontFamily: 'Public Sans, sans-serif' }}
+        >
           {value}
         </p>
-        <p className="font-semibold text-sm leading-[22px] opacity-90" style={{ color: textColor }}>
+        <p
+          className="font-semibold text-sm leading-[22px] opacity-90"
+          style={{ color: textColor, fontFamily: 'Public Sans, sans-serif' }}
+        >
           {label}
         </p>
       </div>
@@ -47,33 +70,24 @@ export function DashboardStatCards({
         label="Registered Organizations"
         bgColor="bg-[#c8facd]"
         textColor="#005249"
-        icon={
-          <IconBuildings className="h-8 w-8 text-[#005249]/70" />
-        }
+        circleBgClass="bg-[#005249]/[0.08]"
+        icon={<IconCardBuildings className="h-6 w-6 text-[#005249]" />}
       />
       <StatCard
         value={totalRevenue != null ? formatRevenue(totalRevenue) : '—'}
         label="Total Revenue"
         bgColor="bg-[#d0f2ff]"
         textColor="#04297a"
-        icon={
-          <svg className="h-8 w-8 text-[#04297a]/70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <circle cx="12" cy="12" r="10" />
-            <path d="M12 6v12M15 9.5c0 .83-.67 1.5-1.5 1.5H11v3h2.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5H11M13 8h-2V6h2.5C14.33 6 15 6.67 15 7.5S14.33 9 13.5 9H13z" />
-          </svg>
-        }
+        circleBgClass="bg-[#04297a]/[0.08]"
+        icon={<IconCardCoins className="h-6 w-6 text-[#04297a]" />}
       />
       <StatCard
         value={ordersProcessedToday ?? '—'}
         label="Orders Processed Today"
         bgColor="bg-[#fff7cd]"
         textColor="#7a4f01"
-        icon={
-          <svg className="h-8 w-8 text-[#7a4f01]/70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <circle cx="12" cy="12" r="10" />
-            <path d="M12 8v4l2 2" strokeLinecap="round" />
-          </svg>
-        }
+        circleBgClass="bg-[#7a4f01]/[0.08]"
+        icon={<IconCardWarningCircle className="h-6 w-6 text-[#7a4f01]" />}
       />
     </div>
   );
