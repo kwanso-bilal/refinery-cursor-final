@@ -16,3 +16,34 @@ body {
   min-width: 320px;
   min-height: 100vh;
 }
+
+/* Auth module – Figma design tokens */
+.auth-module {
+  font-family: 'Public Sans', system-ui, sans-serif;
+  --auth-text-primary: #212b36;
+  --auth-text-secondary: #637381;
+  --auth-text-disabled: #919eab;
+  --auth-primary: #00ab55;
+  --auth-primary-shadow: 0 8px 16px rgba(0, 171, 85, 0.24);
+  --auth-border: rgba(145, 158, 171, 0.32);
+  --auth-input-h: 56px;
+  --auth-input-radius: 8px;
+}
+
+/* Auth inputs: remove autofill background, keep text dark and visible */
+.auth-module .auth-input:-webkit-autofill,
+.auth-module .auth-input:-webkit-autofill:hover,
+.auth-module .auth-input:-webkit-autofill:focus,
+.auth-module .auth-input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px white inset;
+  box-shadow: 0 0 0 1000px white inset;
+  -webkit-text-fill-color: var(--auth-text-primary);
+  caret-color: var(--auth-text-primary);
+  transition: background-color 5000s ease-in-out 0s;
+}
+.auth-module .auth-input::placeholder {
+  color: var(--auth-text-disabled);
+}
+.auth-module .auth-input {
+  color: var(--auth-text-primary);
+}

@@ -1,25 +1,25 @@
-import { BrowserRouter, Link, Navigate, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import AuthLayout from './layouts/AuthLayout';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { useAuth } from './hooks/useAuth';
 import LoginPage from './pages/auth/LoginPage';
 import ForgotPasswordPage from './pages/auth/ForgotPasswordPage';
+import ForgotPasswordSentPage from './pages/auth/ForgotPasswordSentPage';
+import PasswordSetPage from './pages/auth/PasswordSetPage';
 import { ROUTES } from './constants';
 
-function HomePage() {
+/** Redirects "/" to login when not authenticated, to dashboard when authenticated. */
+function DefaultRouteRedirect() {
+  const { isAuthenticated, isLoading } = useAuth();
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <span className="text-slate-500">Loading…</span>
+      </div>
+    );
+  }
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4">
-      <h1 className="text-2xl font-semibold text-slate-800">Refinery</h1>
-      <p className="text-slate-600 mt-2">Welcome. Use the auth flow to sign in.</p>
-      <nav className="mt-6 flex gap-4">
-        <Link to={ROUTES.LOGIN} className="text-slate-700 underline hover:text-slate-900">
-          Sign in
-        </Link>
-        <Link to={ROUTES.DASHBOARD} className="text-slate-700 underline hover:text-slate-900">
-          Dashboard (protected)
-        </Link>
-      </nav>
-    </div>
+    <Navigate to={isAuthenticated ? ROUTES.DASHBOARD : ROUTES.LOGIN} replace />
   );
 }
 
@@ -46,10 +46,12 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path={ROUTES.HOME} element={<HomePage />} />
+        <Route path={ROUTES.HOME} element={<DefaultRouteRedirect />} />
         <Route element={<AuthLayout />}>
           <Route path={ROUTES.LOGIN} element={<LoginPage />} />
           <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPasswordPage />} />
+          <Route path={ROUTES.FORGOT_PASSWORD_SENT} element={<ForgotPasswordSentPage />} />
+          <Route path={ROUTES.PASSWORD_SET} element={<PasswordSetPage />} />
         </Route>
         <Route
           path={ROUTES.DASHBOARD}
