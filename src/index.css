@@ -47,3 +47,11 @@ body {
 .auth-module .auth-input {
   color: var(--auth-text-primary);
 }
+
+/* Dashboard layout – reuse auth tokens */
+.dashboard-module {
+  --auth-text-primary: #212b36;
+  --auth-text-secondary: #637381;
+  --auth-primary: #00ab55;
+  --auth-border: rgba(145, 158, 171, 0.32);
+}
