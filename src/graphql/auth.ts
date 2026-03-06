@@ -46,3 +46,38 @@ export const CUSTOMER_FORGOT_PASSWORD = gql(/* GraphQL */ `
     }
   }
 `);
+
+/**
+ * Current staff/user (from auth token). Use for sidebar role and name.
+ * Schema: fetchStaff -> UserPayload { user { userType, firstName, lastName, email } }
+ */
+export const FETCH_STAFF = gql(/* GraphQL */ `
+  query FetchStaff {
+    fetchStaff {
+      user {
+        id
+        email
+        firstName
+        lastName
+        userType
+      }
+    }
+  }
+`);
+
+/**
+ * Alternative current user (some tokens may resolve via fetchUser e.g. admin).
+ */
+export const FETCH_USER = gql(/* GraphQL */ `
+  query FetchUser {
+    fetchUser {
+      user {
+        id
+        email
+        firstName
+        lastName
+        userType
+      }
+    }
+  }
+`);

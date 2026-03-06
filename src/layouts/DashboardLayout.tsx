@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
+import { useQuery } from '@apollo/client/react';
+import { FetchStaffDocument, FetchUserDocument } from '../generated/graphql/graphql';
 import { useAuth } from '../hooks/useAuth';
 import { ROUTES } from '../constants';
 import {
@@ -9,6 +11,30 @@ import {
   IconPassword,
   IconSignOut,
 } from '../assets/dashboard-assets';
+
+/** Map API UserRoles to display label */
+function formatRole(userType: string | undefined): string {
+  if (!userType) return 'User';
+  const map: Record<string, string> = {
+    SUPER_ADMIN: 'Super Admin',
+    ADMIN: 'Admin',
+    MANAGER: 'Manager',
+    STAFF: 'Staff',
+    CUSTOMER: 'Customer',
+  };
+  return map[userType] ?? userType.replace(/_/g, ' ');
+}
+
+/** Initials from name or email (e.g. "John Doe" -> "JD", "admin@example.com" -> "A") */
+function getInitials(firstName?: string | null, lastName?: string | null, email?: string): string {
+  if (firstName && lastName) {
+    return `${firstName[0]}${lastName[0]}`.toUpperCase();
+  }
+  if (firstName) return firstName.slice(0, 2).toUpperCase();
+  if (lastName) return lastName.slice(0, 2).toUpperCase();
+  if (email) return email[0].toUpperCase();
+  return '?';
+}
 
 const NAV_ITEMS = [
   { to: ROUTES.DASHBOARD, label: 'Dashboard', icon: IconSquaresFour },
@@ -25,6 +51,11 @@ export default function DashboardLayout() {
   const location = useLocation();
   const { logout } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { data: staffData } = useQuery(FetchStaffDocument);
+  const { data: userData } = useQuery(FetchUserDocument);
+  const user = staffData?.fetchStaff?.user ?? userData?.fetchUser?.user;
+  const roleLabel = formatRole(user?.userType);
+  const initials = getInitials(user?.firstName, user?.lastName, user?.email ?? '');
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -55,10 +86,10 @@ export default function DashboardLayout() {
           {/* User card */}
           <div className="mx-5 mb-2 flex h-[76px] items-center gap-4 rounded-xl bg-[rgba(145,158,171,0.08)] px-5 py-4">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[rgba(145,158,171,0.2)] text-[#637381]">
-              <span className="text-sm font-semibold">SA</span>
+              <span className="text-sm font-semibold">{initials}</span>
             </div>
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-semibold text-[var(--auth-text-primary)]">Super Admin</p>
+              <p className="truncate text-sm font-semibold text-[var(--auth-text-primary)]">{roleLabel}</p>
             </div>
           </div>
 

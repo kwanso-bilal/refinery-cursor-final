@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+// hooks
 import { useAuth } from "../../hooks/useAuth";
+// constants
 import { ROUTES } from "../../constants";
 
 /**
