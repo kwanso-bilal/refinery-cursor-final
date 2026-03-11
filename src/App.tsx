@@ -1,4 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { ToastProvider } from './contexts/ToastContext';
+import { ToastContainer } from './components/ToastContainer';
 import AuthLayout from './layouts/AuthLayout';
 import DashboardLayout from './layouts/DashboardLayout';
 import { ProtectedRoute } from './components/ProtectedRoute';
@@ -8,6 +10,9 @@ import ForgotPasswordPage from './pages/auth/ForgotPasswordPage';
 import ForgotPasswordSentPage from './pages/auth/ForgotPasswordSentPage';
 import PasswordSetPage from './pages/auth/PasswordSetPage';
 import DashboardPage from './pages/dashboard/DashboardPage';
+import OrganizationsPage from './pages/organizations/OrganizationsPage';
+import InviteOrganizationPage from './pages/organizations/InviteOrganizationPage';
+import EditOrganizationPage from './pages/organizations/EditOrganizationPage';
 import { ROUTES } from './constants';
 
 /** Redirects "/" to login when not authenticated, to dashboard when authenticated. */
@@ -37,7 +42,9 @@ function PlaceholderPage({ title }: { title: string }) {
 export default function App() {
   return (
     <BrowserRouter>
-      <Routes>
+      <ToastProvider>
+        <ToastContainer />
+        <Routes>
         <Route path={ROUTES.HOME} element={<DefaultRouteRedirect />} />
         <Route element={<AuthLayout />}>
           <Route path={ROUTES.LOGIN} element={<LoginPage />} />
@@ -53,13 +60,16 @@ export default function App() {
           }
         >
           <Route path={ROUTES.DASHBOARD} element={<DashboardPage />} />
-          <Route path="/organizations" element={<PlaceholderPage title="Organizations" />} />
+          <Route path={ROUTES.ORGANIZATIONS} element={<OrganizationsPage />} />
+          <Route path={ROUTES.ORGANIZATIONS_INVITE} element={<InviteOrganizationPage />} />
+          <Route path={ROUTES.ORGANIZATIONS_EDIT} element={<EditOrganizationPage />} />
           <Route path="/payments" element={<PlaceholderPage title="Payments" />} />
           <Route path="/change-password" element={<PlaceholderPage title="Change Password" />} />
           <Route path="/invoices" element={<PlaceholderPage title="Invoices" />} />
         </Route>
         <Route path="*" element={<Navigate to={ROUTES.HOME} replace />} />
       </Routes>
+      </ToastProvider>
     </BrowserRouter>
   );
 }

@@ -8,6 +8,14 @@ export const ROUTES = {
   FORGOT_PASSWORD_SENT: '/forgot-password/sent',
   PASSWORD_SET: '/password-set',
   DASHBOARD: '/dashboard',
+  ORGANIZATIONS: '/organizations',
+  ORGANIZATIONS_INVITE: '/organizations/invite',
+  ORGANIZATIONS_EDIT: '/organizations/:id/edit',
 } as const;
 
 export type RoutePath = (typeof ROUTES)[keyof typeof ROUTES];
+
+/** Build edit organization path from id */
+export function orgEditPath(id: string): string {
+  return `/organizations/${id}/edit`;
+}
